@@ -1,5 +1,6 @@
 import React from 'react'
 import { Logo } from './logo'
+import SidebarRouters from './sidebar-routers'
 
 const Sidebar: React.FC = () => {
     return (
@@ -8,7 +9,7 @@ const Sidebar: React.FC = () => {
                 <Logo />
             </div>
             <main className="flex flex-col w-full">
-                Sidebar
+                <SidebarRouters />
             </main>
         </aside>
     )
