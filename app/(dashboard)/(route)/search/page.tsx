@@ -3,7 +3,7 @@ import React from 'react'
 
 const SearchPage: React.FC = () => {
     return (
-        <div>Search</div>
+        <main className='p-2'>Search</main>
     )
 }
 

@@ -3,7 +3,7 @@ import React from 'react'
 
 const AnalyticsPage: React.FC = () => {
     return (
-        <div>Analytics</div>
+        <main className='p-2'>Analytics</main>
     )
 }
 
