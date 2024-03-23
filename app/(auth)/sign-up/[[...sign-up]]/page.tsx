@@ -1,9 +1,8 @@
 import { SignUp } from '@clerk/nextjs'
 import React from 'react'
 
-type Props = {}
 
-const SignUpPage = (props: Props) => {
+const SignUpPage: React.FC = () => {
     return (
         <SignUp />
     )
