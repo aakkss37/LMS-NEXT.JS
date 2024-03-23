@@ -16,8 +16,8 @@ const NavbarRoutes = () => {
         <div className='flex gap-x-2 ml-auto'>
             {
                 isTeacherPage || isPlayerPage ?
-                    <Button variant='outline' onClick={() => router.push('/')}>
-                        <LogOut className='h-4 w-4 mr-2' /> Exit
+                    <Button variant='outline' size={'sm'} onClick={() => router.push('/')}>
+                        <LogOut className='h-4 w-4 mr-2' /> Exit Teacher Mode
                     </Button>
                     :
                     <Link href={"/teacher/courses"}>
