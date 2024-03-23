@@ -10,6 +10,24 @@ type Props = {
     href: string;
 }
 
+/**
+ * SidebarItem
+ * 
+ * The sidebar item component.
+ * 
+ * This component renders a single navigation link in the
+ * sidebar. It takes the icon, label, and href of the link as
+ * props. The component uses the usePathname hook to get the
+ * current pathname and highlight the link if the current path
+ * matches the link's href or starts with the link's href
+ * followed by a slash.
+ * 
+ * @param icon The icon component to render
+ * @param label The label to render
+ * @param href The href to render
+ * 
+ * @returns {JSX.Element} The sidebar item component
+ */
 const SidebarItem: React.FC<Props> = ({
     icon: Icon,
     label,

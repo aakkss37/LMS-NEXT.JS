@@ -1,5 +1,12 @@
 import Image from "next/image";
 
+/**
+ * Logo component
+ *
+ * Renders the sidebar logo
+ *
+ * @returns {JSX.Element} Logo component
+ */
 export const Logo = () => {
     return (
         <Image
