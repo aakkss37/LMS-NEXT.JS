@@ -1,5 +1,5 @@
 import React from 'react'
-import TitleForm from './_component/titleForm'
+import TitleForm from './_component/title-form'
 
 
 const CreateCoursePage: React.FC = () => {

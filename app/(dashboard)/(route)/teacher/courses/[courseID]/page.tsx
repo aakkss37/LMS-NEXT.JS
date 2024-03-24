@@ -5,6 +5,7 @@ import { auth } from '@clerk/nextjs';
 import { LayoutDashboard } from 'lucide-react';
 import { redirect } from 'next/navigation';
 import React from 'react'
+import { TitleForm } from './_component/title-form';
 
 
 const CoursePage: React.FC<{ params: { courseID: string } }> = async ({ params }) => {
@@ -54,12 +55,15 @@ const CoursePage: React.FC<{ params: { courseID: string } }> = async ({ params }
                     </p>
                 </div>
             </section>
-            <section className='grid grid-cols-1 md:grid-cols-2 gap-4 mt-6'>
-                <div className='flex items-center justify-center gap-y-2'>
-                    <IconBadge icon={LayoutDashboard} /> {" "}
-                    <h2 className='text-xl'>
-                        Customize your course
-                    </h2>
+            <section className='grid grid-cols-1 md:grid-cols-2 gap-4 mt-12'>
+                <div>
+                    <div className='flex items-center gap-y-2'>
+                        <IconBadge icon={LayoutDashboard} /> {" "}
+                        <h2 className='text-xl'>
+                            Customize your course
+                        </h2>
+                    </div>
+                    <TitleForm initialData={course} courseId={course.id} />
                 </div>
             </section>
         </main>
