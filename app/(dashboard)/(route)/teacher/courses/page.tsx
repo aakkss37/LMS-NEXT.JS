@@ -5,7 +5,7 @@ import React from 'react'
 
 const CoursesPage: React.FC = () => {
     return (
-        <main className='p-2'>
+        <main className='p-4'>
             <Link href='/teacher/courses/create'>
                 <Button size={"sm"}>
                     + New Course

@@ -17,7 +17,7 @@ const formSchema = z.object({
 
 
 
-const CourseNameForm: React.FC = () => {
+const TitleForm: React.FC = () => {
     const router = useRouter()
     const { toast } = useToast()
     const form = useForm<z.infer<typeof formSchema>>({
@@ -80,4 +80,4 @@ const CourseNameForm: React.FC = () => {
     )
 }
 
-export default CourseNameForm
+export default TitleForm

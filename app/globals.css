@@ -86,3 +86,9 @@ body,
 .cl-internal-uyu30o {
   display: none;
 }
+
+.debug {
+  border: 1px solid red;
+  margin: 1px;
+  padding: 1px;
+}
