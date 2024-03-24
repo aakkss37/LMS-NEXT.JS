@@ -5,42 +5,43 @@ import axios from "axios";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Pencil } from "lucide-react";
-import React, { useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 import {
     Form,
     FormControl,
+    FormDescription,
     FormField,
     FormItem,
     FormLabel,
     FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button";
 import { toast } from "@/components/ui/use-toast";
 
-interface TitleFormProps {
+interface DescriptionFormProps {
     initialData: {
-        title: string;
+        description: string | null;
     };
     courseId: string;
 };
 
 const formSchema = z.object({
-    title: z.string().min(1, {
-        message: "Title is required",
+    description: z.string().min(1, {
+        message: "Description is required",
     }),
 });
 
-export const TitleForm: React.FC<TitleFormProps> = ({ initialData, courseId }) => {
+export const DescriptionForm: React.FC<DescriptionFormProps> = ({ initialData, courseId }) => {
     const [isEditing, setIsEditing] = useState(false);
     const router = useRouter();
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            title: initialData.title,
+            description: initialData.description,
         },
     });
 
@@ -52,7 +53,7 @@ export const TitleForm: React.FC<TitleFormProps> = ({ initialData, courseId }) =
             await axios.patch(`/api/courses/${courseId}`, values);
             toast({
                 title: "",
-                description: <p className='text-green-600' >Course title updated successfully</p >,
+                description: <p className='text-green-600' >Course description updated successfully</p >,
             })
             setIsEditing(false);
             router.refresh();
@@ -67,7 +68,7 @@ export const TitleForm: React.FC<TitleFormProps> = ({ initialData, courseId }) =
     return (
         <div className="mt-6 border bg-neutral-50 rounded-md p-4">
             <div className="font-medium flex item-center justify-between">
-                <h3 className="text-base">Course title</h3>
+                <h3 className="text-base">Course description</h3>
                 <Button
                     variant="ghost"
                     size="sm"
@@ -75,23 +76,23 @@ export const TitleForm: React.FC<TitleFormProps> = ({ initialData, courseId }) =
                     disabled={isSubmitting}
                 >
                     {
-                        isEditing ? <span>Cancel</span> : <><Pencil className="mr-2 h-4 w-4" /> Edit title</>
+                        isEditing ? <span>Cancel</span> : <><Pencil className="mr-2 h-4 w-4" /> Edit description</>
                     }
                 </Button>
             </div>
             {
                 !isEditing ?
-                    <p className="text-sm mt-2">{initialData.title}</p>
+                    <p className={`text-sm mt-2 ${!initialData.description && "text-neutral-500 italic"}`}>{initialData.description ?? "No description provided"}</p>
                     : <Form {...form}>
                         <FormField
                             control={form.control}
-                            name="title"
+                            name="description"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Title</FormLabel>
+                                    <FormLabel>Description</FormLabel>
                                     <FormControl>
-                                        <Input
-                                            placeholder="e.g. Advance NEXT.JS with mySQL"
+                                        <Textarea
+                                            placeholder="e.g. This course is about.."
                                             disabled={isSubmitting || !isEditing}
                                             {...field}
                                         />

@@ -6,6 +6,7 @@ import { LayoutDashboard } from 'lucide-react';
 import { redirect } from 'next/navigation';
 import React from 'react'
 import { TitleForm } from './_component/title-form';
+import { DescriptionForm } from './_component/description-form';
 
 
 const CoursePage: React.FC<{ params: { courseID: string } }> = async ({ params }) => {
@@ -64,6 +65,7 @@ const CoursePage: React.FC<{ params: { courseID: string } }> = async ({ params }
                         </h2>
                     </div>
                     <TitleForm initialData={course} courseId={course.id} />
+                    <DescriptionForm initialData={course} courseId={course.id} />
                 </div>
             </section>
         </main>
