@@ -16,6 +16,8 @@ export async function PATCH(req: Request, {params}: {params: {courseID: string}}
             ...values
         }
     })
+
+    console.log("Updated course: ", updatedCourse)
     return NextResponse.json("OK", { status: 202 })
     } catch (error: Error | any) {
         console.log("[COURSES] ==>>", error)

@@ -15,7 +15,7 @@ export async function POST(req: Request) {
                 title: title,
             }
         })
-        console.log("Created course: ", course)
+        // console.log("Created course: ", course)
         return NextResponse.json(course , { status: 201 })
 
     } catch (error: Error | any) {

@@ -1,6 +1,6 @@
+import React from 'react'
 import Navbar from '@/app/(dashboard)/_components/macro/navbar/navbar'
 import Sidebar from '@/app/(dashboard)/_components/macro/sidebar/sidebar'
-import React from 'react'
 
 type Props = {
     children: React.ReactNode

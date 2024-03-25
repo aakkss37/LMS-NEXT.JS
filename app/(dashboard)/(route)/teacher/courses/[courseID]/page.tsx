@@ -7,6 +7,7 @@ import { redirect } from 'next/navigation';
 import React from 'react'
 import { TitleForm } from './_component/title-form';
 import { DescriptionForm } from './_component/description-form';
+import { ImageForm } from './_component/image-form';
 
 
 const CoursePage: React.FC<{ params: { courseID: string } }> = async ({ params }) => {
@@ -24,12 +25,8 @@ const CoursePage: React.FC<{ params: { courseID: string } }> = async ({ params }
             id: params.courseID
         }
     })
-
+    // console.log(course)
     if (!course) {
-        toast({
-            title: '',
-            description: <p className='text-red-600'>Course not found</p>,
-        })
         return redirect('/teacher/courses')
     }
 
@@ -66,6 +63,7 @@ const CoursePage: React.FC<{ params: { courseID: string } }> = async ({ params }
                     </div>
                     <TitleForm initialData={course} courseId={course.id} />
                     <DescriptionForm initialData={course} courseId={course.id} />
+                    <ImageForm initialData={course} courseId={course.id} />
                 </div>
             </section>
         </main>

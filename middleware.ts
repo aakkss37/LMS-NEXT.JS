@@ -8,7 +8,7 @@ export default authMiddleware({
   publicRoutes: ['/anyone-can-visit-this-route'], //-->> public unprotected routes, any one can visit this route
   // Prevent the specified routes from accessing
   // authentication information:
-  // ignoredRoutes: ['/no-auth-in-this-route'],
+  // ignoredRoutes: ["/((?!api|trpc))(_next.*|.+\.[\w]+$)", "/api/uploadthing"]
 });
  
 export const config = {
