@@ -4,6 +4,7 @@
         "hookform",
         "Lucide",
         "nextjs",
-        "tailwindcss"
+        "tailwindcss",
+        "Uploadthing"
     ]
 }
