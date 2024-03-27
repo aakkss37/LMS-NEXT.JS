@@ -5,7 +5,7 @@ import axios from "axios";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { ImageIcon, Pencil, PlusCircle } from "lucide-react";
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/components/ui/use-toast";
@@ -33,7 +33,7 @@ const formSchema = z.object({
 });
 
 export const ImageForm: React.FC<ImageFormProps> = ({ initialData, courseId }) => {
-    // const [isEditing, setIsEditing] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
     const router = useRouter();
 
     const form = useForm<z.infer<typeof formSchema>>({
@@ -48,14 +48,16 @@ export const ImageForm: React.FC<ImageFormProps> = ({ initialData, courseId }) =
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         console.log(values)
         try {
+            setIsLoading(true)
             await axios.patch(`/api/courses/${courseId}`, values);
             toast({
                 title: "",
                 description: <p className='text-green-600' >Course image updated successfully</p >,
             })
-            // setIsEditing(false);
+            setIsLoading(false)
             router.refresh();
         } catch (error: any | Error) {
+            setIsLoading(false)
             toast({
                 title: ``,
                 description: <p className='text-red-500' >Error: {error.message}</p>,
@@ -107,13 +109,15 @@ export const ImageForm: React.FC<ImageFormProps> = ({ initialData, courseId }) =
                     </div>
                     : initialData.imageUrl
                     && <div className="relative aspect-video mt-2">
-                        <Image
-                            alt="Upload"
-                            fill
-                            className="object-cover rounded-md"
-                            src={initialData.imageUrl as string}
-                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                        />
+                        <Suspense fallback={<p>Loading...</p>}>
+                            <Image
+                                alt="Upload"
+                                fill
+                                className="object-cover rounded-md"
+                                src={initialData.imageUrl as string}
+                                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                            />
+                        </Suspense>
                     </div>
             }
         </div>

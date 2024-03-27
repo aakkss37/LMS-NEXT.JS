@@ -29,6 +29,11 @@ const CoursePage: React.FC<{ params: { courseID: string } }> = async ({ params }
     if (!course) {
         return redirect('/teacher/courses')
     }
+    const categories = await db.category.findMany({
+        orderBy: {
+            name: 'asc'
+        }
+    })
 
     const requiredFields = [
         course.title,
