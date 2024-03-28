@@ -2,13 +2,14 @@ import { IconBadge } from '@/components/CustomComponent/icon-badge';
 import { toast } from '@/components/ui/use-toast';
 import { db } from '@/lib/db';
 import { auth } from '@clerk/nextjs';
-import { LayoutDashboard } from 'lucide-react';
+import { CircleDollarSign, LayoutDashboard, ListChecks } from 'lucide-react';
 import { redirect } from 'next/navigation';
 import React from 'react'
 import { TitleForm } from './_component/title-form';
 import { DescriptionForm } from './_component/description-form';
 import { ImageForm } from './_component/image-form';
 import { CategoryForm } from './_component/category-form';
+import { PriceForm } from './_component/price-form';
 
 
 const CoursePage: React.FC<{ params: { courseID: string } }> = async ({ params }) => {
@@ -69,7 +70,7 @@ const CoursePage: React.FC<{ params: { courseID: string } }> = async ({ params }
                 </div>
             </section>
             <section className='grid grid-cols-1 md:grid-cols-2 gap-4 mt-12'>
-                <div>
+                <div className='space-y-6'>
                     <div className='flex items-center gap-y-2'>
                         <IconBadge icon={LayoutDashboard} /> {" "}
                         <h2 className='text-xl'>
@@ -77,9 +78,27 @@ const CoursePage: React.FC<{ params: { courseID: string } }> = async ({ params }
                         </h2>
                     </div>
                     <TitleForm initialData={course} courseId={course.id} />
+                    <CategoryForm initialData={course} courseId={course.id} options={categoryOption} />
                     <DescriptionForm initialData={course} courseId={course.id} />
                     <ImageForm initialData={course} courseId={course.id} />
-                    <CategoryForm initialData={course} courseId={course.id} options={categoryOption} />
+                </div>
+                <div className='space-y-6'>
+                    <div className='flex items-center gap-y-2'>
+                        <IconBadge icon={ListChecks} /> {" "}
+                        <h2 className='text-xl'>
+                            Course chapters
+                        </h2>
+                    </div>
+                    <div className='flex items-center gap-y-2'>
+                        <p>TODO: CreateChapter</p>
+                    </div>
+                    <div className='flex items-center gap-y-2'>
+                        <IconBadge icon={CircleDollarSign} /> {" "}
+                        <h2 className='text-xl'>
+                            Pricing
+                        </h2>
+                    </div>
+                    <PriceForm initialData={course} courseId={course.id} />
                 </div>
             </section>
         </main>
