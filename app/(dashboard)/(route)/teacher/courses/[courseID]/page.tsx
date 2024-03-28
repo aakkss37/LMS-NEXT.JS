@@ -8,6 +8,7 @@ import React from 'react'
 import { TitleForm } from './_component/title-form';
 import { DescriptionForm } from './_component/description-form';
 import { ImageForm } from './_component/image-form';
+import { CategoryForm } from './_component/category-form';
 
 
 const CoursePage: React.FC<{ params: { courseID: string } }> = async ({ params }) => {
@@ -34,7 +35,16 @@ const CoursePage: React.FC<{ params: { courseID: string } }> = async ({ params }
             name: 'asc'
         }
     })
-
+    if (!categories) {
+        return redirect('/teacher/courses')
+    }
+    const categoryOption = categories.map((category) => {
+        return {
+            label: category.name,
+            id: category.id
+        }
+    })
+    // console.log(categories)
     const requiredFields = [
         course.title,
         course.description,
@@ -69,6 +79,7 @@ const CoursePage: React.FC<{ params: { courseID: string } }> = async ({ params }
                     <TitleForm initialData={course} courseId={course.id} />
                     <DescriptionForm initialData={course} courseId={course.id} />
                     <ImageForm initialData={course} courseId={course.id} />
+                    <CategoryForm initialData={course} courseId={course.id} options={categoryOption} />
                 </div>
             </section>
         </main>

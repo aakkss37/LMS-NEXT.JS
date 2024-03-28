@@ -19,37 +19,36 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/components/ui/use-toast";
+import { Course } from "@prisma/client";
+import { Textarea } from "@/components/ui/textarea";
+import { Combobox } from "@/components/ui/combobox";
 
 interface CategoryFormProps {
-    initialData: {
-        title: string;
-    };
+    initialData: Course;
     courseId: string;
+    options: { label: string; id: string }[]
 };
 
 const formSchema = z.object({
-    title: z.string().min(1, {
-        message: "Title is required",
-    }),
+    categoryID: z.string().min(1)
 });
 
-export const CategoryForm: React.FC<CategoryFormProps> = ({ initialData, courseId }) => {
+export const CategoryForm: React.FC<CategoryFormProps> = ({ initialData, courseId, options }) => {
     const [isEditing, setIsEditing] = useState(false);
     const router = useRouter();
-
+    const selectedOption = options.find((option) => option.id === initialData.categoryID);
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            title: initialData.title,
+            categoryID: initialData.categoryID ?? "",
         },
     });
-
     const { isSubmitting, isValid } = form.formState;
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         console.log(values)
         try {
-            await axios.patch(`/api/courses/${courseId}`, values);
+            await axios.patch(`/api/courses/${courseId}`, { categoryID: values.categoryID });
             toast({
                 title: "",
                 description: <p className='text-green-600' >Course title updated successfully</p >,
@@ -67,7 +66,7 @@ export const CategoryForm: React.FC<CategoryFormProps> = ({ initialData, courseI
     return (
         <div className="mt-6 border bg-neutral-50 rounded-md p-4">
             <div className="font-medium flex item-center justify-between">
-                <h3 className="text-base">Course title</h3>
+                <h3 className="text-base">Course Category</h3>
                 <Button
                     variant="ghost"
                     size="sm"
@@ -75,24 +74,23 @@ export const CategoryForm: React.FC<CategoryFormProps> = ({ initialData, courseI
                     disabled={isSubmitting}
                 >
                     {
-                        isEditing ? <span>Cancel</span> : <><Pencil className="mr-2 h-4 w-4" /> Edit title</>
+                        isEditing ? <span>Cancel</span> : <><Pencil className="mr-2 h-4 w-4" /> Edit category</>
                     }
                 </Button>
             </div>
             {
                 !isEditing ?
-                    <p className="text-sm mt-2">{initialData.title}</p>
+                    <p className={`text-sm mt-2 ${!initialData.categoryID && "text-neutral-500 italic"}`}>{selectedOption ? selectedOption?.label : "No description provided"}</p>
                     : <Form {...form}>
                         <FormField
                             control={form.control}
-                            name="title"
+                            name="categoryID"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Title</FormLabel>
                                     <FormControl>
-                                        <Input
-                                            placeholder="e.g. Advance NEXT.JS with mySQL"
-                                            disabled={isSubmitting || !isEditing}
+                                        <Combobox
+                                            options={options}
+                                            id={initialData.categoryID ?? ""}
                                             {...field}
                                         />
                                     </FormControl>
