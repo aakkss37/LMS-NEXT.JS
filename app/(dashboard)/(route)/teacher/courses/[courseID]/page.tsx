@@ -80,8 +80,8 @@ const CoursePage: React.FC<{ params: { courseID: string } }> = async ({ params }
             <section className='grid grid-cols-1 md:grid-cols-2 gap-4 mt-12'>
                 <div className='space-y-6'>
                     <div className='flex items-center gap-y-2'>
-                        <IconBadge icon={LayoutDashboard} /> {" "}
-                        <h2 className='text-xl'>
+                        <IconBadge icon={LayoutDashboard} />
+                        <h2 className='text-xl ml-2'>
                             Customize your course
                         </h2>
                     </div>
@@ -92,8 +92,8 @@ const CoursePage: React.FC<{ params: { courseID: string } }> = async ({ params }
                 </div>
                 <div className='space-y-6'>
                     <div className='flex items-center gap-y-2'>
-                        <IconBadge icon={ListChecks} /> {" "}
-                        <h2 className='text-xl'>
+                        <IconBadge icon={ListChecks} />
+                        <h2 className='text-xl ml-2'>
                             Course chapters
                         </h2>
                     </div>
@@ -101,15 +101,15 @@ const CoursePage: React.FC<{ params: { courseID: string } }> = async ({ params }
                         <p>TODO: CreateChapter</p>
                     </div>
                     <div className='flex items-center gap-y-2'>
-                        <IconBadge icon={CircleDollarSign} /> {" "}
-                        <h2 className='text-xl'>
+                        <IconBadge icon={CircleDollarSign} />
+                        <h2 className='text-xl ml-2'>
                             Pricing
                         </h2>
                     </div>
                     <PriceForm initialData={course} courseId={course.id} />
                     <div className='flex items-center gap-y-2'>
-                        <IconBadge icon={File} /> {" "}
-                        <h2 className='text-xl'>
+                        <IconBadge icon={File} />
+                        <h2 className='text-xl ml-2'>
                             Resources and assignments
                         </h2>
                     </div>
