@@ -98,7 +98,7 @@ const CoursePage: React.FC<{ params: { courseID: string } }> = async ({ params }
                         </h2>
                     </div>
                     <div className='flex items-center gap-y-2'>
-                        <p>TODO: CreateChapter</p>
+                        <DescriptionForm initialData={course} courseId={course.id} />
                     </div>
                     <div className='flex items-center gap-y-2'>
                         <IconBadge icon={CircleDollarSign} />

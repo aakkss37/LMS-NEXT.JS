@@ -28,6 +28,10 @@ interface CloudinaryUploadWidgetInfo {
 const formSchema = z.object({
     url: z.string().min(1),
     assetId: z.string().min(1),
+    publicId: z.string().min(1),
+    size: z.number().min(1),
+    format: z.string().min(1),
+    resourceType: z.string().min(1),
 });
 
 export const AttachmentForm: React.FC<AttachmentFormProps> = ({ initialData, courseId }) => {
@@ -98,6 +102,10 @@ export const AttachmentForm: React.FC<AttachmentFormProps> = ({ initialData, cou
                             onSubmit({
                                 url: resp.info.secure_url, // Now TypeScript knows `secure_url` exists
                                 assetId: resp.info.asset_id,
+                                publicId: resp.info.public_id,
+                                size: resp.info.bytes,
+                                format: resp.info.format,
+                                resourceType: resp.info.resource_type,
                             });
                         }
                     }}

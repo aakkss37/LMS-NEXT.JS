@@ -14,13 +14,12 @@ export async function POST(req: Request, {params}: {params: {courseID: string}})
         })
         if (!courseOwner) return new NextResponse("Unauthorized", { status: 401 })
 
-        const {url} = await req.json()
-        console.log(url)
+        const body = await req.json()
         const attachment = await db.attachment.create({
             data: {
-                url,
-                name: url.split("/").pop(),
-                courseId: params.courseID
+                name: body.url.split("/").pop(),
+                courseId: params.courseID,
+                ...body
             }
         })
 

@@ -40,13 +40,17 @@ model Category {
 }
 
 model Attachment {
-  id        String   @id @default(uuid())
-  courseId  String
-  Course    Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
-  name      String
-  url       String   @db.Text
-  createdAt DateTime @default(now())
-  assetId   String   @unique
+  id           String   @id @default(uuid())
+  courseId     String
+  Course       Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  name         String
+  url          String   @db.Text
+  createdAt    DateTime @default(now())
+  assetId      String   @unique
+  publicId     String   @unique
+  size         Int
+  format       String?
+  resourceType String
 
   @@index([courseId])
 }
