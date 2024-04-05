@@ -11,6 +11,7 @@ import { ImageForm } from './_component/image-form';
 import { CategoryForm } from './_component/category-form';
 import { PriceForm } from './_component/price-form';
 import { AttachmentForm } from './_component/attachment-form';
+import { ChapterForm } from './_component/chapters-form';
 
 
 const CoursePage: React.FC<{ params: { courseID: string } }> = async ({ params }) => {
@@ -25,12 +26,18 @@ const CoursePage: React.FC<{ params: { courseID: string } }> = async ({ params }
     }
     const course = await db.course.findUnique({
         where: {
-            id: params.courseID
+            id: params.courseID,
+            userId: userId,
         },
         include: {
             attachments: {
                 orderBy: {
                     createdAt: 'desc'
+                }
+            },
+            chapters: {
+                orderBy: {
+                    position: 'asc'
                 }
             }
         }
@@ -98,7 +105,7 @@ const CoursePage: React.FC<{ params: { courseID: string } }> = async ({ params }
                         </h2>
                     </div>
                     <div className='flex items-center gap-y-2'>
-                        <DescriptionForm initialData={course} courseId={course.id} />
+                        <ChapterForm initialData={course} courseId={course.id} />
                     </div>
                     <div className='flex items-center gap-y-2'>
                         <IconBadge icon={CircleDollarSign} />

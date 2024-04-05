@@ -20,28 +20,27 @@ import {
 import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button";
 import { toast } from "@/components/ui/use-toast";
+import { Chapter, Course } from "@prisma/client";
 
-interface DescriptionFormProps {
-    initialData: {
-        description: string | null;
-    };
+interface ChapterFormProps {
+    initialData: Course & { chapters: Chapter[] };
     courseId: string;
 };
 
 const formSchema = z.object({
-    description: z.string().min(1, {
-        message: "Description is required",
+    chapter: z.string().min(1, {
+        message: "Chapter is required",
     }),
 });
 
-export const DescriptionForm: React.FC<DescriptionFormProps> = ({ initialData, courseId }) => {
+export const ChapterForm: React.FC<ChapterFormProps> = ({ initialData, courseId }) => {
     const [isEditing, setIsEditing] = useState(false);
     const router = useRouter();
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            description: initialData.description ?? "",
+            chapter: initialData.chapters[0].id ?? "",
         },
     });
 
@@ -53,7 +52,7 @@ export const DescriptionForm: React.FC<DescriptionFormProps> = ({ initialData, c
             await axios.patch(`/api/courses/${courseId}`, values);
             toast({
                 title: "",
-                description: <p className='text-green-600' >Course description updated successfully</p >,
+                description: <p className='text-green-600' >Course chapter updated successfully</p >,
             })
             setIsEditing(false);
             router.refresh();
@@ -68,7 +67,7 @@ export const DescriptionForm: React.FC<DescriptionFormProps> = ({ initialData, c
     return (
         <div className="mt-6 border bg-neutral-50 rounded-md p-4">
             <div className="font-medium flex item-center justify-between">
-                <h3 className="text-base">Course description</h3>
+                <h3 className="text-base">Course chapter</h3>
                 <Button
                     variant="ghost"
                     size="sm"
@@ -76,20 +75,20 @@ export const DescriptionForm: React.FC<DescriptionFormProps> = ({ initialData, c
                     disabled={isSubmitting}
                 >
                     {
-                        isEditing ? <span>Cancel</span> : <><Pencil className="mr-2 h-4 w-4" /> Edit description</>
+                        isEditing ? <span>Cancel</span> : <><Pencil className="mr-2 h-4 w-4" /> Edit Chapter</>
                     }
                 </Button>
             </div>
             {
                 !isEditing ?
-                    <p className={`text-sm mt-2 ${!initialData.description && "text-neutral-500 italic"}`}>{initialData.description ?? "No description provided"}</p>
+                    <p className={`text-sm mt-2 ${!initialData.chapters && "text-neutral-500 italic"}`}>{initialData.chapters[0].title ?? "No Chapter provided"}</p>
                     : <Form {...form}>
                         <FormField
                             control={form.control}
-                            name="description"
+                            name="chapter"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Description</FormLabel>
+                                    <FormLabel>Chapter</FormLabel>
                                     <FormControl>
                                         <Textarea
                                             placeholder="e.g. This course is about.."
