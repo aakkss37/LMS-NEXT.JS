@@ -4,7 +4,7 @@ import * as z from "zod";
 import axios from "axios";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { Pencil } from "lucide-react";
+import { Pencil, PlusCircle } from "lucide-react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
@@ -17,10 +17,11 @@ import {
     FormLabel,
     FormMessage,
 } from "@/components/ui/form";
-import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button";
 import { toast } from "@/components/ui/use-toast";
 import { Chapter, Course } from "@prisma/client";
+import { Input } from "@/components/ui/input";
+import { cn } from "@/lib/utils";
 
 interface ChapterFormProps {
     initialData: Course & { chapters: Chapter[] };
@@ -28,35 +29,38 @@ interface ChapterFormProps {
 };
 
 const formSchema = z.object({
-    chapter: z.string().min(1, {
-        message: "Chapter is required",
+    title: z.string().min(1, {
+        message: "Title is required",
     }),
 });
 
 export const ChapterForm: React.FC<ChapterFormProps> = ({ initialData, courseId }) => {
-    const [isEditing, setIsEditing] = useState(false);
+    const [isCreating, setIsCreating] = useState(false);
+    const [isUpdating, setIsUpdating] = useState(false);
     const router = useRouter();
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            chapter: initialData.chapters[0].id ?? "",
+            title: "",
         },
     });
 
     const { isSubmitting, isValid } = form.formState;
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
-        console.log(values)
+        // console.log(values)
         try {
-            await axios.patch(`/api/courses/${courseId}`, values);
+            setIsUpdating(true);
+            await axios.post(`/api/courses/${courseId}/chapters`, values);
             toast({
                 title: "",
                 description: <p className='text-green-600' >Course chapter updated successfully</p >,
             })
-            setIsEditing(false);
+            setIsUpdating(false);
             router.refresh();
         } catch (error: any | Error) {
+            setIsUpdating(false);
             toast({
                 title: ``,
                 description: <p className='text-red-500' >Error: {error.message}</p>,
@@ -71,46 +75,59 @@ export const ChapterForm: React.FC<ChapterFormProps> = ({ initialData, courseId 
                 <Button
                     variant="ghost"
                     size="sm"
-                    onClick={() => setIsEditing((prev) => !prev)}
+                    onClick={() => setIsCreating((prev) => !prev)}
                     disabled={isSubmitting}
                 >
                     {
-                        isEditing ? <span>Cancel</span> : <><Pencil className="mr-2 h-4 w-4" /> Edit Chapter</>
+                        isCreating ? <span>Cancel</span> : <><PlusCircle className="mr-2 h-4 w-4" /> Add Chapter</>
                     }
                 </Button>
             </div>
             {
-                !isEditing ?
-                    <p className={`text-sm mt-2 ${!initialData.chapters && "text-neutral-500 italic"}`}>{initialData.chapters[0].title ?? "No Chapter provided"}</p>
-                    : <Form {...form}>
-                        <FormField
-                            control={form.control}
-                            name="chapter"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Chapter</FormLabel>
-                                    <FormControl>
-                                        <Textarea
-                                            placeholder="e.g. This course is about.."
-                                            disabled={isSubmitting || !isEditing}
-                                            {...field}
-                                        />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                        <div className="flex justify-end mt-4">
-                            <Button
-                                type="submit"
-                                variant={"default"}
-                                disabled={isSubmitting || !isValid}
-                                onClick={() => onSubmit(form.getValues())}
-                            >
-                                Save
-                            </Button>
+                isCreating &&
+                <Form {...form}>
+                    <FormField
+                        control={form.control}
+                        name="title"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Chapter</FormLabel>
+                                <FormControl>
+                                    <Input
+                                        placeholder="e.g. Course introduction.."
+                                        disabled={isSubmitting || !isCreating}
+                                        {...field}
+                                    />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                    <div className="flex justify-end mt-4">
+                        <Button
+                            type="submit"
+                            variant={"default"}
+                            disabled={isSubmitting || !isValid}
+                            onClick={() => onSubmit(form.getValues())}
+                        >
+                            Create
+                        </Button>
+                    </div>
+                </Form>
+            }
+            {
+                !isCreating && (
+                    <>
+                        <div className={cn(
+                            "text-sm mt-2",
+                            !initialData.chapters.length && "text-slate-500 italic"
+                        )}>
+                            {!initialData.chapters.length && "No chapters yet"}
+                            {/* TODO: Add chapters list */}
                         </div>
-                    </Form>
+                        <p className="text-sm text-muted-foreground mt-4">Drag and drop to reorder the chapters</p>
+                    </>
+                )
             }
         </div>
     )

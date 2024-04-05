@@ -42,7 +42,7 @@ const CoursePage: React.FC<{ params: { courseID: string } }> = async ({ params }
             }
         }
     })
-    console.log(course)
+    // console.log(course)
     if (!course) {
         return redirect('/teacher/courses')
     }
@@ -67,6 +67,7 @@ const CoursePage: React.FC<{ params: { courseID: string } }> = async ({ params }
         course.imageUrl,
         course.price,
         course.categoryID,
+        course.chapters.some((chapter) => chapter.isPublished),
     ]
     const totalRequiredFields = requiredFields.length
     const completedFields = requiredFields.filter(Boolean).length
@@ -104,9 +105,9 @@ const CoursePage: React.FC<{ params: { courseID: string } }> = async ({ params }
                             Course chapters
                         </h2>
                     </div>
-                    <div className='flex items-center gap-y-2'>
-                        <ChapterForm initialData={course} courseId={course.id} />
-                    </div>
+
+                    <ChapterForm initialData={course} courseId={course.id} />
+
                     <div className='flex items-center gap-y-2'>
                         <IconBadge icon={CircleDollarSign} />
                         <h2 className='text-xl ml-2'>
