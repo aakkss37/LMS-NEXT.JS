@@ -14,7 +14,7 @@ export async function POST(req: Request, {params}: {params: {courseID: string}})
         })
         if (!courseOwner) return new NextResponse("Unauthorized", { status: 401 })
         const body = await req.json()
-        console.log("BODDDDDYYYYYY &&&&&$$$$$$$", body)
+        
         const lastChapter = await db.chapter.findFirst({
             where: {
                 courseId: params.courseID
