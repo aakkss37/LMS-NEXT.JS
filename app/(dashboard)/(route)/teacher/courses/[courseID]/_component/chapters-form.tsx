@@ -5,7 +5,7 @@ import axios from "axios";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Pencil, PlusCircle } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import {
@@ -22,6 +22,7 @@ import { toast } from "@/components/ui/use-toast";
 import { Chapter, Course } from "@prisma/client";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
+import ChaptersList from "./chapters-list";
 
 interface ChapterFormProps {
     initialData: Course & { chapters: Chapter[] };
@@ -56,6 +57,25 @@ export const ChapterForm: React.FC<ChapterFormProps> = ({ initialData, courseId 
             toast({
                 title: "",
                 description: <p className='text-green-600' >Course chapter updated successfully</p >,
+            })
+            setIsUpdating(false);
+            router.refresh();
+        } catch (error: any | Error) {
+            setIsUpdating(false);
+            toast({
+                title: ``,
+                description: <p className='text-red-500' >Error: {error.message}</p>,
+            })
+        }
+    }
+
+    const onReorder = async (updateData: { id: string; position: number }[]) => {
+        try {
+            setIsUpdating(true);
+            await axios.post(`/api/courses/${courseId}/chapters/reorder`, updateData);
+            toast({
+                title: "",
+                description: <p className='text-green-600' >Course chapters reordered successfully</p >,
             })
             setIsUpdating(false);
             router.refresh();
@@ -123,7 +143,11 @@ export const ChapterForm: React.FC<ChapterFormProps> = ({ initialData, courseId 
                             !initialData.chapters.length && "text-slate-500 italic"
                         )}>
                             {!initialData.chapters.length && "No chapters yet"}
-                            {/* TODO: Add chapters list */}
+                            <ChaptersList
+                                items={initialData.chapters ?? []}
+                                onEdit={(id) => { }}
+                                onReorder={onReorder}
+                            />
                         </div>
                         <p className="text-sm text-muted-foreground mt-4">Drag and drop to reorder the chapters</p>
                     </>
