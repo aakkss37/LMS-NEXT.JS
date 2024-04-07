@@ -76,7 +76,7 @@ const CoursePage: React.FC<{ params: { courseID: string } }> = async ({ params }
     return (
         <main className='p-4'>
             <section className='flex items-center justify-between'>
-                <div className="flex flex-col gap-y-2">
+                <div className="flex flex-col gap-x-2">
                     <h1 className='text-2xl font-medium'>
                         Course setup
                     </h1>
@@ -87,9 +87,9 @@ const CoursePage: React.FC<{ params: { courseID: string } }> = async ({ params }
             </section>
             <section className='grid grid-cols-1 md:grid-cols-2 gap-4 mt-12'>
                 <div className='space-y-6'>
-                    <div className='flex items-center gap-y-2'>
+                    <div className='flex items-center gap-x-2'>
                         <IconBadge icon={LayoutDashboard} />
-                        <h2 className='text-xl ml-2'>
+                        <h2 className='text-xl'>
                             Customize your course
                         </h2>
                     </div>
@@ -99,25 +99,25 @@ const CoursePage: React.FC<{ params: { courseID: string } }> = async ({ params }
                     <ImageForm initialData={course} courseId={course.id} />
                 </div>
                 <div className='space-y-6'>
-                    <div className='flex items-center gap-y-2'>
+                    <div className='flex items-center gap-x-2'>
                         <IconBadge icon={ListChecks} />
-                        <h2 className='text-xl ml-2'>
+                        <h2 className='text-xl'>
                             Course chapters
                         </h2>
                     </div>
 
                     <ChapterForm initialData={course} courseId={course.id} />
 
-                    <div className='flex items-center gap-y-2'>
+                    <div className='flex items-center gap-x-2'>
                         <IconBadge icon={CircleDollarSign} />
-                        <h2 className='text-xl ml-2'>
+                        <h2 className='text-xl'>
                             Pricing
                         </h2>
                     </div>
                     <PriceForm initialData={course} courseId={course.id} />
-                    <div className='flex items-center gap-y-2'>
+                    <div className='flex items-center gap-x-2'>
                         <IconBadge icon={File} />
-                        <h2 className='text-xl ml-2'>
+                        <h2 className='text-xl'>
                             Resources and assignments
                         </h2>
                     </div>

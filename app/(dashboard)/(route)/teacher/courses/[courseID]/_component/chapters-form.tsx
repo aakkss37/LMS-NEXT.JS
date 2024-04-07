@@ -59,7 +59,7 @@ export const ChapterForm: React.FC<ChapterFormProps> = ({ initialData, courseId 
                 description: <p className='text-green-600' >Course chapter updated successfully</p >,
             })
             setIsUpdating(false);
-            router.refresh();
+            window.location.reload();
         } catch (error: any | Error) {
             setIsUpdating(false);
             toast({
@@ -77,8 +77,8 @@ export const ChapterForm: React.FC<ChapterFormProps> = ({ initialData, courseId 
                 title: "",
                 description: <p className='text-green-600' >Course chapters reordered successfully</p >,
             })
-            setIsUpdating(false);
             router.refresh();
+            setIsUpdating(false);
         } catch (error: any | Error) {
             setIsUpdating(false);
             toast({
@@ -88,6 +88,9 @@ export const ChapterForm: React.FC<ChapterFormProps> = ({ initialData, courseId 
         }
     }
 
+    const onEdit = (id: string) => {
+        router.push(`/teacher/courses/${courseId}/chapters/${id}`)
+    }
     return (
         <div className="mt-6 border bg-neutral-50 rounded-md p-4">
             <div className="font-medium flex item-center justify-between">
@@ -145,7 +148,7 @@ export const ChapterForm: React.FC<ChapterFormProps> = ({ initialData, courseId 
                             {!initialData.chapters.length && "No chapters yet"}
                             <ChaptersList
                                 items={initialData.chapters ?? []}
-                                onEdit={(id) => { }}
+                                onEdit={onEdit}
                                 onReorder={onReorder}
                             />
                         </div>
