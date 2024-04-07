@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import React from 'react'
 import { ChapterTitleForm } from './_component/title-form';
+import { ChapterDescriptionForm } from './_component/description-form';
 
 const ChapterPage: React.FC<{ params: { courseID: string, chapterID: string } }> = async ({ params }) => {
     const { userId } = auth();
@@ -64,6 +65,7 @@ const ChapterPage: React.FC<{ params: { courseID: string, chapterID: string } }>
                         <h2 className='text-xl'>Customize your chapter</h2>
                     </div>
                     <ChapterTitleForm initialData={chapter} courseId={params.courseID} chapterId={params.chapterID} />
+                    <ChapterDescriptionForm initialData={chapter} courseId={params.courseID} chapterId={params.chapterID} />
                 </div>
             </section>
         </main>

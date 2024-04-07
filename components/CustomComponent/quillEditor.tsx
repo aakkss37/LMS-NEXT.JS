@@ -22,6 +22,20 @@ export const QuillEditor = ({
                 theme="snow"
                 value={value}
                 onChange={onChange}
+                modules={{
+                    toolbar: [
+                        [{ header: [1, 2, false] }],
+                        ["bold", "italic", "underline"],
+                        [
+                            { list: "ordered" },
+                            { list: "bullet" },
+                            { indent: "-1" },
+                            { indent: "+1" },
+                        ],
+                        ["link"],
+                        // ["clean"],
+                    ],
+                }}
             />
         </div>
     );

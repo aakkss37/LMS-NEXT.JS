@@ -5,15 +5,15 @@ import { useMemo } from "react";
 
 import "react-quill/dist/quill.bubble.css";
 
-interface QuillEditorProps {
+interface QuillPreviewProps {
     onChange: (value: string) => void;
     value: string;
 };
 
-export const QuillEditor = ({
+export const QuillPreview = ({
     onChange,
     value,
-}: QuillEditorProps) => {
+}: QuillPreviewProps) => {
     const ReactQuill = useMemo(() => dynamic(() => import("react-quill"), { ssr: false }), []);
 
     return (
@@ -22,6 +22,7 @@ export const QuillEditor = ({
                 theme="bubble"
                 value={value}
                 readOnly
+
             />
         </div>
     );
