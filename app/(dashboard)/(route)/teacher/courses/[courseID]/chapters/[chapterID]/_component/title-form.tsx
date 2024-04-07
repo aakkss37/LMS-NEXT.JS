@@ -46,7 +46,7 @@ export const ChapterTitleForm: React.FC<ChapterTitleFormProps> = ({ initialData,
     const { isSubmitting, isValid } = form.formState;
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
-        console.log(values)
+        // console.log(values)
         try {
             await axios.patch(`/api/courses/${courseId}/chapters/${chapterId}`, values);
             toast({

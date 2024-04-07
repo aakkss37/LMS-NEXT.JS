@@ -11,6 +11,7 @@ import { useRouter } from "next/navigation";
 import {
     Form,
     FormControl,
+    FormDescription,
     FormField,
     FormItem,
     FormLabel,
@@ -19,27 +20,27 @@ import {
 import { Button } from "@/components/ui/button";
 import { toast } from "@/components/ui/use-toast";
 import { Chapter } from "@prisma/client";
-import { QuillEditor } from "@/components/CustomComponent/quillEditor";
+import { Checkbox } from "@/components/ui/checkbox"
 import { QuillPreview } from "@/components/CustomComponent/quillPreview";
 
-interface ChapterDescriptionFormProps {
+interface ChapterAccessFormProps {
     initialData: Chapter;
     courseId: string;
     chapterId: string;
 };
 
 const formSchema = z.object({
-    description: z.string().min(1),
+    isFree: z.boolean().default(false),
 });
 
-export const ChapterDescriptionForm: React.FC<ChapterDescriptionFormProps> = ({ initialData, courseId, chapterId }) => {
+export const ChapterAccessForm: React.FC<ChapterAccessFormProps> = ({ initialData, courseId, chapterId }) => {
     const [isEditing, setIsEditing] = useState(false);
     const router = useRouter();
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            description: initialData.description ?? "",
+            isFree: initialData.isFree ?? false,
         },
     });
 
@@ -66,7 +67,7 @@ export const ChapterDescriptionForm: React.FC<ChapterDescriptionFormProps> = ({ 
     return (
         <div className="mt-6 border bg-neutral-50 rounded-md p-4">
             <div className="font-medium flex item-center justify-between">
-                <h3 className="text-base">Chapter description</h3>
+                <h3 className="text-base">Chapter Access</h3>
                 <Button
                     variant="ghost"
                     size="sm"
@@ -74,27 +75,31 @@ export const ChapterDescriptionForm: React.FC<ChapterDescriptionFormProps> = ({ 
                     disabled={isSubmitting}
                 >
                     {
-                        isEditing ? <span>Cancel</span> : <><Pencil className="mr-2 h-4 w-4" /> Edit description</>
+                        isEditing ? <span>Cancel</span> : <><Pencil className="mr-2 h-4 w-4" /> Edit Accessability</>
                     }
                 </Button>
             </div>
             {
                 !isEditing ?
-                    initialData.description ? <QuillPreview value={initialData.description} /> : <p className={`text-sm mt-2 text-neutral-500 italic`}>No description provided</p>
+                    initialData.isFree ? <p className={`text-sm mt-2 text-neutral-500 italic`}>This chapter is free for preview</p> : <p className={`text-sm mt-2 text-neutral-500 italic`}>This chapter is not free.</p>
                     : <Form {...form}>
                         <FormField
                             control={form.control}
-                            name="description"
+                            name="isFree"
                             render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Description</FormLabel>
+                                <FormItem className="flex flex-row items-center space-x-3 space-y-0 rounded-md border p-4">
+
                                     <FormControl>
-                                        <QuillEditor
-                                            // value={field.value}
-                                            // onChange={field.onChange}
-                                            {...field}
+                                        <Checkbox
+                                            checked={field.value}
+                                            onCheckedChange={field.onChange}
                                         />
                                     </FormControl>
+                                    <FormLabel>
+                                        <FormDescription>
+                                            Check this box if you want to make this chapter free for preview.
+                                        </FormDescription>
+                                    </FormLabel>
                                     <FormMessage />
                                 </FormItem>
                             )}
