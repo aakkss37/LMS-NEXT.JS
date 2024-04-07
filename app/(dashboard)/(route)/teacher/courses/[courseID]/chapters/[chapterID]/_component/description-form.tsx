@@ -20,6 +20,7 @@ import { Button } from "@/components/ui/button";
 import { toast } from "@/components/ui/use-toast";
 import { Chapter } from "@prisma/client";
 import { QuillEditor } from "@/components/CustomComponent/quillEditor";
+import { QuillPreview } from "@/components/CustomComponent/quillPreview";
 
 interface ChapterDescriptionFormProps {
     initialData: Chapter;
@@ -79,7 +80,7 @@ export const ChapterDescriptionForm: React.FC<ChapterDescriptionFormProps> = ({ 
             </div>
             {
                 !isEditing ?
-                    <p className={`text-sm mt-2 ${!initialData.description && "text-neutral-500 italic"}`}>{initialData.description ?? "No description provided"}</p>
+                    initialData.description ? <QuillPreview value={initialData.description} /> : <p className={`text-sm mt-2 text-neutral-500 italic`}>No description provided</p>
                     : <Form {...form}>
                         <FormField
                             control={form.control}
