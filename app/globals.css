@@ -2,6 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
+.debug {
+  border: 1px solid red;
+  margin: 1px;
+  padding: 1px;
+}
+
 html,
 body,
 :root {
@@ -88,11 +94,10 @@ body,
 /* !!!!!CLERK STYLES */
 .cl-internal-12qvck8,
 .cl-internal-uyu30o {
-  display: none;
+  display: none !important;
 }
 
-.debug {
-  border: 1px solid red;
-  margin: 1px;
-  padding: 1px;
-}
+
+/* !!!!!CLOUDINARY STYLES */
+/* !!!!!CLOUDINARY STYLES */
+/* !!!!!CLOUDINARY STYLES */

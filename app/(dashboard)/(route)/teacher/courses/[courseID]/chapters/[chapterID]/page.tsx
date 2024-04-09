@@ -1,13 +1,14 @@
 import { IconBadge } from '@/components/CustomComponent/icon-badge';
 import { db } from '@/lib/db';
 import { auth } from '@clerk/nextjs';
-import { ArrowLeft, Eye, LayoutDashboard } from 'lucide-react';
+import { ArrowLeft, Eye, LayoutDashboard, Video } from 'lucide-react';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import React from 'react'
 import { ChapterTitleForm } from './_component/title-form';
 import { ChapterDescriptionForm } from './_component/description-form';
 import { ChapterAccessForm } from './_component/access-form';
+import { ChapterVideoForm } from './_component/video-form';
 
 const ChapterPage: React.FC<{ params: { courseID: string, chapterID: string } }> = async ({ params }) => {
     const { userId } = auth();
@@ -72,6 +73,13 @@ const ChapterPage: React.FC<{ params: { courseID: string, chapterID: string } }>
                         <h2 className='text-xl'>Access setting</h2>
                     </div>
                     <ChapterAccessForm initialData={chapter} courseId={params.courseID} chapterId={params.chapterID} />
+                </div>
+                <div className="space-y-6">
+                    <div className="flex items-center gap-x-2">
+                        <IconBadge icon={Video} />
+                        <h2 className='text-xl'>Add a video</h2>
+                    </div>
+                    <ChapterVideoForm initialData={chapter} courseId={params.courseID} chapterId={params.chapterID} />
                 </div>
             </section>
         </main>

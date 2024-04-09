@@ -5,7 +5,8 @@ import { authMiddleware } from "@clerk/nextjs";
  
 export default authMiddleware({
   // Allow signed out users to access the specified routes:
-  publicRoutes: ['/anyone-can-visit-this-route'], //-->> public unprotected routes, any one can visit this route
+  // publicRoutes: ['/anyone-can-visit-this-route'], //-->> public unprotected routes, any one can visit this route
+  publicRoutes: ['/sign-in', '/sign-up'], //-->> public unprotected routes, any one can visit this route
   // Prevent the specified routes from accessing
   // authentication information:
   // ignoredRoutes: ["/((?!api|trpc))(_next.*|.+\.[\w]+$)", "/api/uploadthing"]

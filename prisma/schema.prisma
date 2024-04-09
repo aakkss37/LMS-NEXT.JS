@@ -79,7 +79,7 @@ model Chapter {
 
 model MuxData {
   id         String  @id @default(uuid())
-  assiteId   String  @unique
+  assetId    String  @unique
   playBackId String?
   chapterId  String  @unique
   chapter    Chapter @relation(fields: [chapterId], references: [id], onDelete: Cascade)
