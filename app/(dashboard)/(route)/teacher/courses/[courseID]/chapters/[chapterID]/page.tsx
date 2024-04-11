@@ -10,6 +10,7 @@ import { ChapterDescriptionForm } from './_component/description-form';
 import { ChapterAccessForm } from './_component/access-form';
 import { ChapterVideoForm } from './_component/video-form';
 import Banner from '@/components/CustomComponent/banner';
+import ChapterActions from './_component/chapter-actions';
 
 const ChapterPage: React.FC<{ params: { courseID: string, chapterID: string } }> = async ({ params }) => {
     const { userId } = auth();
@@ -32,6 +33,9 @@ const ChapterPage: React.FC<{ params: { courseID: string, chapterID: string } }>
     const totalFields = requiredFields.length;
     const completedFields = requiredFields.filter(Boolean).length;
     const progress = `${completedFields}/${totalFields}`
+
+    const isCompleted = requiredFields.every(Boolean);
+
     return (
         <>
             {!chapter.isPublished && <Banner variant={"warning"} label="This chapter is not published. It will not be visible in the course." />}
@@ -54,12 +58,12 @@ const ChapterPage: React.FC<{ params: { courseID: string, chapterID: string } }>
                                     Complete all fields {progress}
                                 </span>
                             </div>
-                            {/* <ChapterActions
-                                disabled={!isComplete}
-                                courseId={params.courseId}
-                                chapterId={params.chapterId}
+                            <ChapterActions
+                                chapterID={params.chapterID}
+                                courseID={params.courseID}
+                                disabled={!isCompleted}
                                 isPublished={chapter.isPublished}
-                            /> */}
+                            />
                         </div>
                     </div>
                 </section>
