@@ -60,8 +60,8 @@ const ChaptersList: React.FC<ChaptersListProps> = ({ items, onReorder, onEdit })
                                         className={cn(
                                             `flex items-center gap-2 rounded-md border p-1 mb-2
                                             text-sm bg-neutral-100 border-neutral-300
-                                            text-slate-700`,
-                                            chapter.isPublished && 'bg-sky-100 border-sky-300 text-sky-700'
+                                            text-slate-700 shadow-lg`,
+                                            chapter.isPublished && 'bg-neutral-100 border-neutral-300 text-neutral-700 '
                                         )}
                                         ref={provided.innerRef}
                                         {...provided.draggableProps}
@@ -70,7 +70,7 @@ const ChaptersList: React.FC<ChaptersListProps> = ({ items, onReorder, onEdit })
                                             className={cn(
                                                 `px-2 py-3 border-r border-r-slate-200 hover:bg-slate-300
                                                 rounded-l-md transition`,
-                                                chapter.isPublished && 'border-r-sky-200 hover:bg-sky-200'
+                                                chapter.isPublished && 'border-r-neutral-200 hover:bg-neutral-200'
                                             )}
                                             {...provided.dragHandleProps}
                                         >
@@ -86,7 +86,7 @@ const ChaptersList: React.FC<ChaptersListProps> = ({ items, onReorder, onEdit })
                                             <Badge
                                                 className={cn(
                                                     "bg-neutral-500",
-                                                    chapter.isPublished && "bg-sky-700"
+                                                    chapter.isPublished && "bg-[#DADFF7] text-neutral-700"
                                                 )}
                                             >
                                                 {chapter.isPublished ? "Published" : "Draft"}
