@@ -79,14 +79,16 @@ const ChaptersList: React.FC<ChaptersListProps> = ({ items, onReorder, onEdit })
                                         {chapter.title}
                                         <div className="ml-auto pr-2 flex item-center gap-x-2">
                                             {chapter.isFree && (
-                                                <Badge>
+                                                <Badge
+                                                    className='bg-[#DADFF7] text-neutral-700 hover:bg-[#DADFF7] hover:text-neutral-700'
+                                                >
                                                     Free
                                                 </Badge>
                                             )}
                                             <Badge
                                                 className={cn(
                                                     "bg-neutral-500",
-                                                    chapter.isPublished && "bg-[#DADFF7] text-neutral-700"
+                                                    chapter.isPublished && "bg-[#DADFF7] text-neutral-700 hover:bg-[#DADFF7] hover:text-neutral-700"
                                                 )}
                                             >
                                                 {chapter.isPublished ? "Published" : "Draft"}
