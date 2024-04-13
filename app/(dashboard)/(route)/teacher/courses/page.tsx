@@ -23,17 +23,24 @@ const CoursesPage: React.FC = async () => {
             userId: userId
         }
     })
-    console.log(courses)
     return (
         <main className='p-4'>
-            <div className='flex justify-end'>
+            <div className='flex justify-between items-center'>
+                <div className="flex flex-col gap-x-2">
+                    <h1 className='text-2xl font-medium'>
+                        Courses
+                    </h1>
+                    <p className='text-sm text-slate-700'>
+                        No. of courses created by you: {courses.length}
+                    </p>
+                </div>
                 <Link href='/teacher/courses/create'>
                     <Button size={"sm"}>
                         + New Course
                     </Button>
                 </Link>
             </div>
-            <div className='my-4'>
+            <div className='my-12'>
                 <CourseList courses={courses} />
             </div>
         </main>
