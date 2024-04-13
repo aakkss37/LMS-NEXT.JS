@@ -2,6 +2,7 @@
 import AlertModal from '@/components/CustomComponent/alerts-modal'
 import { Button } from '@/components/ui/button'
 import { toast } from '@/components/ui/use-toast'
+import { useConfettiStore } from '@/hooks/use-confetti'
 import axios from 'axios'
 import { LoaderCircle, TrashIcon } from 'lucide-react'
 import { useRouter } from 'next/navigation'
@@ -18,11 +19,14 @@ const CourseActions: React.FC<CourseActionsProps> = ({ disabled, courseID, isPub
     const router = useRouter()
     const [isDeleting, setIsDeleting] = useState(false);
     const [isPublishLoading, setIsPublishLoading] = useState(false);
+    const confetti = useConfettiStore();
 
     const togglePublished = async () => {
         try {
             setIsPublishLoading(true)
             await axios.patch(`/api/courses/${courseID}`, { isPublished: !isPublished });
+            // Show confetti animation if course is published
+            if (!isPublished === true) confetti.openConfetti();
             router.refresh();
         } catch (error: Error | any) {
             toast({
