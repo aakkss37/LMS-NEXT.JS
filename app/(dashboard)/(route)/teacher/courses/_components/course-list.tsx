@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react'
 import ImageCard from '@/components/CustomComponent/image-card'
 import { Course } from '@prisma/client'
 import { useRouter } from 'next/navigation'
+import qs from 'qs' //--> query-string
 import * as z from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -13,39 +14,29 @@ import {
     FormControl,
     FormField,
     FormItem,
-    FormLabel,
     FormMessage,
 } from "@/components/ui/form";
 import { Input } from '@/components/ui/input'
 import axios from 'axios'
 import { toast } from '@/components/ui/use-toast'
 import { SearchIcon } from 'lucide-react'
+import { useDebounce } from '@/hooks/use-debounce'
 
 interface CourseListProps {
     courses: Course[]
 }
 
-const formSchema = z.object({
-    searchInput: z.string(),
-})
 const CourseList: React.FC<CourseListProps> = ({ courses }) => {
     const router = useRouter()
     const [courseList, setCourseList] = useState<Course[]>(courses);
     const [isSearchLoading, setIsSearchLoading] = useState(false);
+    const [searchInput, setSearchInput] = useState('');
+    const debounceValue = useDebounce(searchInput, 500)
 
-
-
-    const form = useForm<z.infer<typeof formSchema>>({
-        resolver: zodResolver(formSchema),
-        defaultValues: {
-            searchInput: ""
-        }
-    })
-
-    const searchCourse = async (query: z.infer<typeof formSchema>) => {
+    const searchCourse = async (value: string) => {
         try {
             setIsSearchLoading(true)
-            const filteredCourse = await axios.get(`/api/courses?searchCourse=${query.searchInput}`)
+            const filteredCourse = await axios.get(`/api/courses?searchCourse=${value}`)
             setCourseList(filteredCourse.data)
         } catch (error: any | Error) {
             setIsSearchLoading(false)
@@ -57,34 +48,19 @@ const CourseList: React.FC<CourseListProps> = ({ courses }) => {
             setIsSearchLoading(false)
         }
     }
-    // useEffect(() => {
-    //     searchCourse(form.getValues())
-    // }, [form]);
-    console.log("courseList ====>>>>", courseList);
+    useEffect(() => {
+        searchCourse(debounceValue)
+    }, [debounceValue]);
     return (
         <div>
             <div className='relative my-8 max-w-96'>
-                <Form {...form}>
-                    <FormField
-                        control={form.control}
-                        name="searchInput"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormControl>
-                                    <Input
-                                        placeholder="Search course name"
-                                        {...field}
-                                        onChange={(e) => {
-                                            form.setValue("searchInput", e.target.value);
-                                            searchCourse(form.getValues());
-                                        }}
-                                    />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-                </Form>
+
+                <Input
+                    placeholder="Search course name"
+                    onChange={(e) => {
+                        setSearchInput(e.target.value);
+                    }}
+                />
                 <span className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
                     {isSearchLoading ? <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-neutral-700"></div> : <SearchIcon className='text-neutral-500 h-5 w-5' />}
                 </span>
@@ -93,7 +69,7 @@ const CourseList: React.FC<CourseListProps> = ({ courses }) => {
             {
                 courseList.length === 0
                     ? <p className='text-neutral-500 text-center mt-20'>No courses found</p>
-                    : <ul role="list" className="grid grid-cols-2 gap-x-2 gap-y-8 sm:grid-cols-3 sm:gap-x-4 lg:grid-cols-5 xl:gap-x-6 cursor-pointer">
+                    : <ul role="list" className="grid grid-cols-2 gap-x-2 gap-y-8 sm:grid-cols-3 sm:gap-x-4 md:grid-cols-3 md:gap-x-4 xl:grid-cols-5 xl:gap-x-6 cursor-pointer">
                         {courseList.map((course) => (
                             <ImageCard
                                 key={course.id}
