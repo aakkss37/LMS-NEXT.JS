@@ -36,7 +36,7 @@ const guestRoutes = [
          */
         icon: Compass,
         label: "Browse",
-        href: "/search",
+        href: "/browse",
     },
 ];
 

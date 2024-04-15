@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Suspense } from 'react'
 import { Button } from '@/components/ui/button'
 import { toast } from '@/components/ui/use-toast'
 import { db } from '@/lib/db'
@@ -41,7 +41,9 @@ const CoursesPage: React.FC = async () => {
                 </Link>
             </div>
             <div className='my-12'>
-                <CourseList courses={courses} />
+                <Suspense fallback={<p>Loading feed...</p>}>
+                    <CourseList courses={courses} />
+                </Suspense>
             </div>
         </main>
     )

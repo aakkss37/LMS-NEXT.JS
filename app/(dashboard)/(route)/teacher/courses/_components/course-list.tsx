@@ -4,18 +4,6 @@ import React, { useEffect, useState } from 'react'
 import ImageCard from '@/components/CustomComponent/image-card'
 import { Course } from '@prisma/client'
 import { useRouter } from 'next/navigation'
-import qs from 'qs' //--> query-string
-import * as z from 'zod'
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-
-import {
-    Form,
-    FormControl,
-    FormField,
-    FormItem,
-    FormMessage,
-} from "@/components/ui/form";
 import { Input } from '@/components/ui/input'
 import axios from 'axios'
 import { toast } from '@/components/ui/use-toast'
@@ -54,7 +42,6 @@ const CourseList: React.FC<CourseListProps> = ({ courses }) => {
     return (
         <div>
             <div className='relative my-8 max-w-96'>
-
                 <Input
                     placeholder="Search course name"
                     onChange={(e) => {
