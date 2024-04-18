@@ -8,9 +8,10 @@ export async function GET(req: NextRequest) {
         // console.log(userId)
         if (!userId) return new NextResponse("Unauthorized", { status: 401 })
         const searchParams = req.nextUrl.searchParams
-        const searchQuery = searchParams.get("searchCourse")
+        const searchQuery = searchParams.get("search")
         const categoryQuery = searchParams.get("category")
-        console.log("query: ", searchQuery)
+        console.log("searchQuery: ", searchQuery)
+        console.log("categoryQuery: ", categoryQuery)
 
         const filteredCourse = searchQuery && !categoryQuery ? await db.course.findMany({
             where: {
@@ -25,7 +26,7 @@ export async function GET(req: NextRequest) {
                 categoryID: { contains: categoryQuery, not: null  }
         }}) :  await db.course.findMany()
 
-        return NextResponse.json(filteredCourse , { status: 201 })
+        return NextResponse.json(filteredCourse , { status: 200 })
 
     } catch (error: Error | any) {
         console.log("[COURSES SEARCH] ==>>", error)

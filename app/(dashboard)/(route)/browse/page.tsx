@@ -25,13 +25,13 @@ const SearchPage: React.FC = async () => {
     })
     return (
         <main className='p-4 text-sm'>
-            <p className='my-2'>
-                Filter Category:
+            <p className='my-2 '>
+                <span>Filter Category: </span>
             </p>
             <div className='flex flex-wrap gap-2 justify-start items-center'>
                 <Categories categories={categories} />
             </div>
-            <div className='my-12 max-w-96'>
+            <div className='my-12 max-w-96 '>
                 <Search />
             </div>
             <div className='my-12'>

@@ -1,7 +1,6 @@
 "use client"
 import React, { useEffect, useState } from 'react'
 import { Input } from '@/components/ui/input';
-import { useDebounce } from '@/hooks/use-debounce';
 import { SearchIcon } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
 
@@ -9,18 +8,24 @@ import { useRouter, useSearchParams } from 'next/navigation';
 const Search: React.FC = () => {
     const [isSearchLoading, setIsSearchLoading] = useState(false);
     const [isMounted, setIsMounted] = useState(false);
-    const [searchInput, setSearchInput] = useState<string | null>(null);
-    const debounceValue = useDebounce(searchInput, 500)
     const searchParams = useSearchParams();
+    const [searchInput, setSearchInput] = useState<string>(searchParams.get('search') || '');
     const router = useRouter();
 
     useEffect(() => {
         if (isMounted) {
-            const url = `/browse${searchParams.get('category') ? `?category=${searchParams.get('category')}` : ''}${debounceValue ? `&search=${debounceValue}` : ''}`
+            let url = `/browse`
+            if (searchParams.get('category') && !searchInput) {
+                url = `/browse?category=${searchParams.get('category')}`
+            } else if (!searchParams.get('category') && searchInput) {
+                url = `/browse?search=${searchInput}`
+            } else if (searchParams.get('category') && searchInput) {
+                url = `/browse?category=${searchParams.get('category')}&search=${searchInput}`
+            }
             router.push(url)
         } else setIsMounted(true);
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [debounceValue])
+    }, [searchInput])
     return (
         <div className='relative'>
             <Input
@@ -28,6 +33,7 @@ const Search: React.FC = () => {
                 onChange={(e) => {
                     setSearchInput(e.target.value);
                 }}
+                value={searchInput}
             />
             <span className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
                 {isSearchLoading ? <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-neutral-700"></div> : <SearchIcon className='text-neutral-500 h-5 w-5' />}

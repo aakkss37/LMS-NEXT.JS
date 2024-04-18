@@ -1,18 +1,52 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 "use client"
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import ImageCard from '@/components/CustomComponent/image-card'
 import { Course } from '@prisma/client'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
+import { useDebounce } from '@/hooks/use-debounce'
+import { toast } from '@/components/ui/use-toast'
+import axios from 'axios'
 
 interface CourseListProps {
     courses: Course[]
 }
 
 const CourseList: React.FC<CourseListProps> = ({ courses }) => {
-    const router = useRouter()
-    const [courseList] = useState<Course[]>(courses);
+    const [courseList, setCourseList] = useState<Course[]>(courses);
+    const router = useRouter();
+    const searchParams = useSearchParams();
+    const [isMounted, setIsMounted] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+    const selectedCategory = searchParams.get('category');
+    const debounceValue = useDebounce(searchParams.get('search'), 500)
+    console.log(searchParams.get('search'))
+    const fetchCourseData = async () => {
+        try {
+            const response = await axios.get(`/api/browse?category=${selectedCategory}&search=${debounceValue}`);
+            console.log(response);
+            setCourseList(response.data);
+        } catch (error: any | Error) {
+            setIsLoading(false)
+            toast({
+                title: ``,
+                description: <p className='text-red-500' >Error: {error.message}</p>,
+            })
+        } finally {
+            setIsLoading(false)
+        }
+    };
+
+    useEffect(() => {
+        if (selectedCategory || debounceValue && isMounted) {
+            fetchCourseData();
+        } else {
+            setIsMounted(true);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [selectedCategory, debounceValue]);
+
 
     return (
         <div>

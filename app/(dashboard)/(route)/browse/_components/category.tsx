@@ -12,34 +12,23 @@ interface CategoriesProps {
 const Categories: React.FC<CategoriesProps> = ({ categories }) => {
     const router = useRouter();
     const searchParam = useSearchParams();
-    const [isSearchLoading, setIsSearchLoading] = useState(false);
     const selectedCategory = searchParam.get('category') ?? "";
-    const [isMounted, setIsMounted] = useState(false);
+    const searchQuery = searchParam.get('search') ?? "";
 
-    const fetchCourseData = async () => {
-        try {
-            const response = await axios.get(`/api/browse?category=${selectedCategory}`);
-            console.log(response);
-        } catch (error: any | Error) {
-            setIsSearchLoading(false)
-            toast({
-                title: ``,
-                description: <p className='text-red-500' >Error: {error.message}</p>,
-            })
-        } finally {
-            setIsSearchLoading(false)
+    const handleClickOnCategory = (id: string) => {
+        if (id === selectedCategory && searchQuery) {
+            router.push(`/browse/?&search=${searchQuery}`)
+            return
+        } else if (id === selectedCategory && !searchQuery) {
+            router.push(`/browse`)
+            return
         }
-    };
-
-    useEffect(() => {
-        if (selectedCategory && isMounted) {
-            fetchCourseData();
+        if (searchQuery) {
+            router.push(`/browse/?category=${id}&search=${searchQuery}`)
         } else {
-            setIsMounted(true);
+            router.push(`/browse/?category=${id}`)
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [selectedCategory])
-
+    }
     return (
         <>
             {
@@ -53,7 +42,7 @@ const Categories: React.FC<CategoriesProps> = ({ categories }) => {
                             )
                         }
                         onClick={() => {
-                            router.push(`/browse/?category=${category.id}`)
+                            handleClickOnCategory(category.id)
                         }}
                     >
                         {category.name}
