@@ -7,7 +7,8 @@ import { Course } from '@prisma/client'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useDebounce } from '@/hooks/use-debounce'
 import { toast } from '@/components/ui/use-toast'
-import axios from 'axios'
+import axios, { AxiosResponse } from 'axios'
+import { useQuery } from '@tanstack/react-query'
 
 interface CourseListProps {
     courses: Course[]
@@ -24,22 +25,30 @@ const CourseList: React.FC<CourseListProps> = ({ courses }) => {
     console.log(searchParams.get('search'))
     const fetchCourseData = async () => {
         try {
-            const response = await axios.get(`/api/browse?category=${selectedCategory}&search=${debounceValue}`);
-            console.log(response);
+            setIsLoading(true);
+            let response: AxiosResponse<any, any>;
+            if (selectedCategory && !debounceValue) {
+                response = await axios.get(`/api/browse?category=${selectedCategory}`);
+            } else if (!selectedCategory && debounceValue) {
+                response = await axios.get(`/api/browse?search=${debounceValue}`);
+            } else if (selectedCategory && debounceValue) {
+                response = await axios.get(`/api/browse?category=${selectedCategory}&search=${debounceValue}`);
+            } else {
+                response = await axios.get(`/api/browse`);
+            }
             setCourseList(response.data);
         } catch (error: any | Error) {
-            setIsLoading(false)
             toast({
                 title: ``,
                 description: <p className='text-red-500' >Error: {error.message}</p>,
             })
         } finally {
-            setIsLoading(false)
+            setIsLoading(false);
         }
     };
 
     useEffect(() => {
-        if (selectedCategory || debounceValue && isMounted) {
+        if (isMounted) {
             fetchCourseData();
         } else {
             setIsMounted(true);
@@ -47,10 +56,11 @@ const CourseList: React.FC<CourseListProps> = ({ courses }) => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [selectedCategory, debounceValue]);
 
-
     return (
-        <div>
-            {
+
+        isLoading
+            ? <p className='text-neutral-500 text-center mt-20'>Loading...</p>
+            : <div>    {
                 courseList.length === 0
                     ? <p className='text-neutral-500 text-center mt-20'>No courses found</p>
                     : <ul role="list" className="grid grid-cols-2 gap-x-2 gap-y-8 sm:grid-cols-3 sm:gap-x-4 md:grid-cols-3 md:gap-x-4 xl:grid-cols-5 xl:gap-x-6 cursor-pointer">
@@ -67,7 +77,8 @@ const CourseList: React.FC<CourseListProps> = ({ courses }) => {
                         ))}
                     </ul>
             }
-        </div>
+            </div>
+
     )
 }
 

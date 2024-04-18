@@ -1,5 +1,6 @@
 import { db } from "@/lib/db";
 import { auth } from "@clerk/nextjs";
+import { Course } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
@@ -10,22 +11,31 @@ export async function GET(req: NextRequest) {
         const searchParams = req.nextUrl.searchParams
         const searchQuery = searchParams.get("search")
         const categoryQuery = searchParams.get("category")
-        console.log("searchQuery: ", searchQuery)
-        console.log("categoryQuery: ", categoryQuery)
-
-        const filteredCourse = searchQuery && !categoryQuery ? await db.course.findMany({
-            where: {
-                title: { contains: searchQuery},
-            }
-        }) : categoryQuery && !searchQuery ? await db.course.findMany({
+    
+        let filteredCourse: Course[] 
+        if (searchQuery && !categoryQuery ){
+            console.log("only search query")
+            filteredCourse = await db.course.findMany({
+                where: {
+                    title: { contains: searchQuery },
+                }
+            })
+        } else if ( categoryQuery && !searchQuery ) {
+            console.log("only category query")
+            filteredCourse = await db.course.findMany({
             where: {
                 categoryID: { contains: categoryQuery, not: null  }
-        }}) : categoryQuery && searchQuery ? await db.course.findMany({
+        }}) 
+        } else if ( categoryQuery && searchQuery ) {
+            console.log("both search and category query")
+            filteredCourse = await db.course.findMany({
             where: {
                 title: { contains: searchQuery },
                 categoryID: { contains: categoryQuery, not: null  }
-        }}) :  await db.course.findMany()
+            }})
+        }  else  filteredCourse= await db.course.findMany()
 
+        console.log("filteredCourse: ", filteredCourse)
         return NextResponse.json(filteredCourse , { status: 200 })
 
     } catch (error: Error | any) {

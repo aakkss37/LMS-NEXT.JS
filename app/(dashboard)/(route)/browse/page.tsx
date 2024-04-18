@@ -18,6 +18,7 @@ const SearchPage: React.FC = async () => {
         return redirect('/sign-in')
     }
     const courses = await db.course.findMany()
+    // console.log(courses)
     const categories = await db.category.findMany({
         orderBy: {
             name: 'asc'
