@@ -15,46 +15,63 @@ interface CourseListProps {
 }
 
 const CourseList: React.FC<CourseListProps> = ({ courses }) => {
-    const [courseList, setCourseList] = useState<Course[]>(courses);
+    // const [courseList, setCourseList] = useState<Course[]>(courses);
+    console.log("courses ===>>>", courses)
     const router = useRouter();
     const searchParams = useSearchParams();
-    const [isMounted, setIsMounted] = useState(false);
-    const [isLoading, setIsLoading] = useState(false);
+    // const [isMounted, setIsMounted] = useState(false);
+    // const [isLoading, setIsLoading] = useState(false);
     const selectedCategory = searchParams.get('category');
-    const debounceValue = useDebounce(searchParams.get('search'), 500)
-    console.log(searchParams.get('search'))
-    const fetchCourseData = async () => {
+    const debounceValue = useDebounce(searchParams.get('search'), 500);
+
+    let apiUrl = '/api/browse';
+    if (selectedCategory && !debounceValue) {
+        apiUrl = `/api/browse?category=${selectedCategory}`;
+    } else if (!selectedCategory && debounceValue) {
+        apiUrl = `/api/browse?search=${debounceValue}`;
+    } else if (selectedCategory && debounceValue) {
+        apiUrl = `/api/browse?category=${selectedCategory}&search=${debounceValue}`;
+    } else {
+        apiUrl = `/api/browse`;
+    }
+
+    console.log(apiUrl)
+    const fetchCourseData: () => Promise<Course[]> = async () => {
         try {
-            setIsLoading(true);
-            let response: AxiosResponse<any, any>;
-            if (selectedCategory && !debounceValue) {
-                response = await axios.get(`/api/browse?category=${selectedCategory}`);
-            } else if (!selectedCategory && debounceValue) {
-                response = await axios.get(`/api/browse?search=${debounceValue}`);
-            } else if (selectedCategory && debounceValue) {
-                response = await axios.get(`/api/browse?category=${selectedCategory}&search=${debounceValue}`);
-            } else {
-                response = await axios.get(`/api/browse`);
-            }
-            setCourseList(response.data);
+            const response: AxiosResponse<any, any> = await axios.get(apiUrl);
+            return response.data;
         } catch (error: any | Error) {
-            toast({
-                title: ``,
-                description: <p className='text-red-500' >Error: {error.message}</p>,
-            })
-        } finally {
-            setIsLoading(false);
+            return error;
         }
     };
 
-    useEffect(() => {
-        if (isMounted) {
-            fetchCourseData();
-        } else {
-            setIsMounted(true);
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [selectedCategory, debounceValue]);
+
+    // useEffect(() => {
+    //     if (isMounted) {
+    //         fetchCourseData();
+    //     } else {
+    //         setIsMounted(true);
+    //     }
+    //     // eslint-disable-next-line react-hooks/exhaustive-deps
+    // }, [selectedCategory, debounceValue]);
+
+    const {
+        data: courseList,
+        isLoading,
+        error
+    } = useQuery({
+        queryKey: [apiUrl],
+        queryFn: fetchCourseData,
+        initialData: courses,
+    });
+
+    console.log("courseList--=-=-=-", courseList)
+    if (error) {
+        toast({
+            title: ``,
+            description: <p className='text-red-500' >Error: {error.message}</p>,
+        })
+    }
 
     return (
 
