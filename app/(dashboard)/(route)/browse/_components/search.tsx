@@ -1,31 +1,37 @@
 "use client"
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { Input } from '@/components/ui/input';
 import { SearchIcon } from 'lucide-react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useDebounce } from '@/hooks/use-debounce';
+import { useRouter } from 'next/navigation';
 
 
-const Search: React.FC = () => {
-    const [isSearchLoading, setIsSearchLoading] = useState(false);
-    const [isMounted, setIsMounted] = useState(false);
-    const searchParams = useSearchParams();
-    const [searchInput, setSearchInput] = useState<string>(searchParams.get('search') || '');
+const Search: React.FC<{ params: { filters: string[] }, searchParams: { [key: string]: string } }> = ({ params, searchParams }) => {
+    const [searchInput, setSearchInput] = React.useState(searchParams.s ?? '')
+    const debounceValue = useDebounce(searchInput, 500);
+    const [isMounted, setIsMounted] = React.useState(false);
     const router = useRouter();
 
     useEffect(() => {
         if (isMounted) {
-            let url = `/browse`
-            if (searchParams.get('category') && !searchInput) {
-                url = `/browse?category=${searchParams.get('category')}`
-            } else if (!searchParams.get('category') && searchInput) {
-                url = `/browse?search=${searchInput}`
-            } else if (searchParams.get('category') && searchInput) {
-                url = `/browse?category=${searchParams.get('category')}&search=${searchInput}`
+            if (debounceValue) {
+                if (params.filters) {
+                    router.push(`/browse/${params.filters[0]}?s=${debounceValue}`)
+                } else {
+                    router.push(`/browse?s=${debounceValue}`)
+                }
+            } else {
+                if (params.filters) {
+                    router.push(`/browse/${params.filters[0]}`)
+                } else {
+                    router.push(`/browse`)
+                }
             }
-            router.push(url)
-        } else setIsMounted(true);
+        }
+        setIsMounted(true);
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [searchInput])
+    }, [debounceValue])
+
     return (
         <div className='relative'>
             <Input
@@ -36,7 +42,7 @@ const Search: React.FC = () => {
                 value={searchInput}
             />
             <span className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
-                {isSearchLoading ? <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-neutral-700"></div> : <SearchIcon className='text-neutral-500 h-5 w-5' />}
+                <SearchIcon className='text-neutral-500 h-5 w-5' />
             </span>
         </div>
     )

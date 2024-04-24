@@ -11,7 +11,7 @@ import { Course } from '@prisma/client'
 
 const SearchPage: React.FC<{ params: { filters: string[] }, searchParams: { [key: string]: string } }> = async ({ params, searchParams }) => {
     console.log(params.filters)
-    console.log(searchParams)
+    console.log("searchhhhh", searchParams)
     const { userId } = auth()
     if (!userId) {
         toast({
@@ -22,7 +22,7 @@ const SearchPage: React.FC<{ params: { filters: string[] }, searchParams: { [key
     }
     // console.log(courses)
     const categorySelected = params.filters ? params.filters[0] : undefined;
-    const searchQuery = params.filters ? params.filters[1] : undefined;
+    const searchQuery = searchParams.s ?? undefined;
     let filteredCourse: Course[]
     if (searchQuery && !categorySelected) {
         console.log("only search")
@@ -63,7 +63,7 @@ const SearchPage: React.FC<{ params: { filters: string[] }, searchParams: { [key
                 <Categories categories={categories} selectedCategory={categorySelected} />
             </div>
             <div className='my-12 max-w-96 '>
-                <Search />
+                <Search params={params} searchParams={searchParams} />
             </div>
             <div className='my-12'>
                 <CourseList courses={filteredCourse} />
