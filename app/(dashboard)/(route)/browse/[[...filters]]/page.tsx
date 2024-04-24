@@ -3,9 +3,9 @@ import { db } from '@/lib/db'
 import { auth } from '@clerk/nextjs'
 import { redirect } from 'next/navigation'
 import React, { Suspense } from 'react'
-import Categories from './_components/category'
-import CourseList from './_components/course-list'
-import Search from './_components/search'
+import Categories from '../_components/category'
+import CourseList from '../_components/course-list'
+import Search from '../_components/search'
 import { Course } from '@prisma/client'
 
 
