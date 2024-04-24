@@ -35,7 +35,7 @@ export async function GET(req: NextRequest) {
             }})
         }  else  filteredCourse= await db.course.findMany()
 
-        console.log("filteredCourse: ", filteredCourse)
+        // console.log("filteredCourse: ", filteredCourse)
         return NextResponse.json(filteredCourse , { status: 200 })
 
     } catch (error: Error | any) {
